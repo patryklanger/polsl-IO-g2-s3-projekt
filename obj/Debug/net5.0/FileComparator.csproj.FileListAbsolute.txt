@@ -1,0 +1,5 @@
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.csproj.AssemblyReference.cache
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.GeneratedMSBuildEditorConfig.editorconfig
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.AssemblyInfoInputs.cache
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.AssemblyInfo.cs
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.csproj.CoreCompileInputs.cache
