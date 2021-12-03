@@ -1,11 +1,8 @@
 ﻿using System;
 namespace FileComparator
 {
-    public interface FileReader
+    public interface IFileReader
     {
-        public static Text readFile(string filePath)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Text ReadFile(string filePath);
     }
 }

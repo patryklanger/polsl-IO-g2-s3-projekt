@@ -3,3 +3,13 @@
 /Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.AssemblyInfoInputs.cache
 /Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.AssemblyInfo.cs
 /Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.csproj.CoreCompileInputs.cache
+/Users/patryklanger/Projects/FileComparator/FileComparator/bin/Debug/net5.0/FileComparator.deps.json
+/Users/patryklanger/Projects/FileComparator/FileComparator/bin/Debug/net5.0/FileComparator.runtimeconfig.json
+/Users/patryklanger/Projects/FileComparator/FileComparator/bin/Debug/net5.0/FileComparator.runtimeconfig.dev.json
+/Users/patryklanger/Projects/FileComparator/FileComparator/bin/Debug/net5.0/FileComparator.dll
+/Users/patryklanger/Projects/FileComparator/FileComparator/bin/Debug/net5.0/ref/FileComparator.dll
+/Users/patryklanger/Projects/FileComparator/FileComparator/bin/Debug/net5.0/FileComparator.pdb
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.dll
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/ref/FileComparator.dll
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.pdb
+/Users/patryklanger/Projects/FileComparator/FileComparator/obj/Debug/net5.0/FileComparator.genruntimeconfig.cache

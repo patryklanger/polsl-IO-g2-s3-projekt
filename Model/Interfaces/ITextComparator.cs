@@ -1,8 +1,8 @@
 ﻿using System;
 namespace FileComparator
 {
-    public interface TextComparator
+    public interface ITextComparator
     {
-        public abstract Text createNewText();
+        public abstract Text CreateNewText();
     }
 }

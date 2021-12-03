@@ -3,15 +3,19 @@ namespace FileComparator
 {
     public class Text
     {
-        string content;
-        string name;
-        string directory;
+        public string Content;
+        public string Name;
+        public string Directory;
 
-        public void display() {
+        
+
+        public void Display()
+        {
             throw new NotImplementedException();
         }
         public Text()
         {
+            //throw new NotImplementedException();
         }
     }
 }

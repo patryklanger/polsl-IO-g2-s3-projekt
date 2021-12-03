@@ -6,7 +6,7 @@ namespace FileComparator
         public View()
         {
         }
-        public void updateView()
+        public void UpdateView()
         {
             throw new NotImplementedException();
         }

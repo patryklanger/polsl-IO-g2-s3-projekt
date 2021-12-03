@@ -6,10 +6,12 @@ namespace FileComparator
         public Text firstText;
         public Text secondText;
         public Text resultText;
-        public TextComparator comparator;
+        public ITextComparator comparator;
         public PrimaryFileWorker fileWorker;
-        public Controller()
+        public Controller(ITextComparator comparator, View view)
         {
+            throw new NotImplementedException();
         }
+        
     }
 }
