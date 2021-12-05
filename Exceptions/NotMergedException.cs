@@ -5,7 +5,7 @@ namespace FileComparator
 {
     public class NotMergedException : Exception
     {
-        private const string Message = "Not all decisions where made";
+        private new const string Message = "Not all decisions where made";
 
         public NotMergedException()
         {

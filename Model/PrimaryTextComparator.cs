@@ -8,16 +8,27 @@ namespace FileComparator
     {
         private int currentDecisionId;
         private bool mergeReady = false;
+        private bool compared = false;
         private List<KeyValuePair<int, string>> listOfTexts;
         public List<KeyValuePair<int, string>> ListOfTexts
         {
             private set => listOfTexts = value;
-            get => listOfTexts;
+            get
+            {
+                try
+                {
+                    if (!compared) throw new NotComparedException();
+                    return listOfTexts;
+                }
+                catch
+                {
+                    return new List<KeyValuePair<int, string>>();
+                }
+            }
         }
 
-        public PrimaryTextComparator(Text firstText, Text secondText)
+        public PrimaryTextComparator()
         {
-            MakeComparison(firstText, secondText);
         }
 
         private List<Diff> DiffLineMode(string text1, string text2)
@@ -32,12 +43,13 @@ namespace FileComparator
             return diffs;
         }
 
-        private void MakeComparison(Text text1, Text text2)
+        public void MakeComparison(Text text1, Text text2)
         {
             var dmp = new diff_match_patch();
             var diff = DiffLineMode(text1.Content, text2.Content);
             dmp.diff_cleanupSemantic(diff);
             SplitToBlocks(diff);
+            this.compared = true;
         } 
 
         private void SplitToBlocks(List<Diff> diffSToSplit)
@@ -79,10 +91,18 @@ namespace FileComparator
 
         public Text CreateNewText()
         {
-            if (!this.mergeReady) throw new NotMergedException();
-            var resultText = new Text();
-            foreach(var blockOfText in this.listOfTexts) resultText.Content += blockOfText;
-            return resultText;
+            try
+            {
+                if (!this.mergeReady) throw new NotMergedException();
+                var resultText = new Text();
+                foreach (var blockOfText in this.listOfTexts) resultText.Content += blockOfText;
+                return resultText;
+            }
+            catch
+            {
+                return new Text();
+            }
+            
         }
     }
 }
