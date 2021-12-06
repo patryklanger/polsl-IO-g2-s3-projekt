@@ -6,6 +6,13 @@ namespace FileComparator
 {
     public class Controller
     {
+        const string FIRST_FILE_FILEPATH = @"/Users/patryklanger/inputFile.txt";
+        const string SECOND_FILE_FILEPATH = @"/Users/patryklanger/inputFile1.txt";
+        const string RESULT_FILE_FILEPATH = @"/Users/patryklanger/";
+        const string RESULT_FILE_FILENAME = "result.txt";
+        const string FILE_SAVED_MESSAGE = "FileSaved!";
+        const string OPTIONS_MESSAGE = "Choose between two options:\nFirst option is";
+
         public Text firstText;
         public Text secondText;
         public Text resultText;
@@ -20,36 +27,40 @@ namespace FileComparator
         }
         public async Task Main()
         {
-
-            var text11 = fileWorker.ReadFile(@"/Users/patryklanger/inputFile.txt");
-            var text12 = fileWorker.ReadFile(@"/Users/patryklanger/inputFile1.txt");
-
-            List<Text> tmpList;
-            comparator.MakeComparison(text11, text12);
+            var text1 = new Text();
+            var text2 = new Text();
+            try
+            {
+                text1 = fileWorker.ReadFile(FIRST_FILE_FILEPATH);
+                text2 = fileWorker.ReadFile(SECOND_FILE_FILEPATH);
+            }
+            catch (Exception e)
+            {
+                view.DisplayText(e.Message);
+            }
+            comparator.MakeComparison(text1, text2);
             while (!comparator.MergeReady)
             {
-                tmpList = comparator.MakeDecision();
-                if(tmpList != null)
+                if(!comparator.MakeDecision())
                 {
-                    SolveConflict(tmpList);
-                    tmpList = null;
+                    SolveConflict();
                 }
             }
 
             Text resultText = comparator.ResultText;
             Console.WriteLine(resultText.Content);
-            await fileWorker.SaveFile(resultText, @"/Users/patryklanger/", "result.txt").ContinueWith((antecedent) =>Console.WriteLine("FileSaved!"));
+            await fileWorker.SaveFile(resultText, RESULT_FILE_FILEPATH, RESULT_FILE_FILENAME).ContinueWith((antecdent) => Console.WriteLine(FILE_SAVED_MESSAGE));
 
             
         }
-        private void SolveConflict(List<Text> conflictList)
+        private void SolveConflict()
         {
-            view.DisplayText("Choose between two options:\nFirst option is");
-            view.DisplayTextWithNumber(1, conflictList[0]);
-            view.DisplayTextWithNumber(2, conflictList[1]);
+            view.DisplayText(OPTIONS_MESSAGE);
+            view.DisplayTextWithNumber(1, comparator.Conflict.Item1);
+            view.DisplayTextWithNumber(2, comparator.Conflict.Item2);
             var userChoise = view.WaitForUserInput();
-            if (userChoise == "1") comparator.ConflictSolved(conflictList[0]);
-            else comparator.ConflictSolved(conflictList[1]);
+            if (userChoise == "1") comparator.ResolveConfivt(0);
+            else comparator.ResolveConfivt(1);
         } 
         
     }

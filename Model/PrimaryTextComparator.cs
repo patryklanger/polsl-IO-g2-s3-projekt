@@ -9,8 +9,10 @@ namespace FileComparator
         private int currentDecisionId;
         private bool mergeReady = false;
         private bool compared = false;
+        private bool unsolvedConflict = false;
         private List<KeyValuePair<int, string>> listOfTexts;
         private Text resultText;
+        private (Text, Text) conflict = (new Text(), new Text());
         public List<KeyValuePair<int, string>> ListOfTexts
         {
             private set => listOfTexts = value;
@@ -48,16 +50,26 @@ namespace FileComparator
             private set => mergeReady = value;
             get => mergeReady;
         }
+        public (Text,Text) Conflict
+        {
+            private set => conflict = value;
+            get => conflict;
+        }
         public PrimaryTextComparator()
         {
             currentDecisionId = 0;
             resultText = new Text();
 
         }
-        public void ConflictSolved(Text textToAdd)
+        public void ResolveConfivt(int index)
         {
-            this.resultText.Content += textToAdd.Content;
-            currentDecisionId++;
+            if (index == 0) this.resultText.Content += conflict.Item1.Content;
+            else if (index == 1) this.resultText.Content += conflict.Item2.Content;
+            else throw new IndexOutOfRangeException();
+            conflict = (new Text(), new Text());
+            unsolvedConflict = false;
+            if (currentDecisionId == listOfTexts[^1].Key) mergeReady = true;
+            else currentDecisionId++;
         }
         private List<Diff> DiffLineMode(string text1, string text2)
         {
@@ -112,63 +124,47 @@ namespace FileComparator
             this.listOfTexts = diffDict;
         }
 
-        public List<Text> MakeDecision()
+        public bool MakeDecision()
         {
-            if (mergeReady) return null;
+            if (unsolvedConflict) throw new UnresolvedConflictException();
+            if (mergeReady) return true;
             for (int i = 0; i < listOfTexts.Count; i++)
             {
                 if(i == listOfTexts.Count - 1 && listOfTexts[listOfTexts.Count-1].Key == currentDecisionId)
                 {
                     resultText.Content += listOfTexts[i].Value;
                     mergeReady = true;
-                    return null;
+                    return true;
                 }
                 if (listOfTexts[i].Key == listOfTexts[i+1].Key && listOfTexts[i].Key == currentDecisionId)
                 {
-                    //Console.WriteLine("Choose version: 1 or 2");
-                    //string userChoise = Console.ReadLine();
-                    //if (userChoise == "1") resultText.Content += listOfTexts[i].Value;
-                    //else resultText.Content += listOfTexts[i + 1].Value;
-                    //currentDecisionId++;
-                    //if(listOfTexts[listOfTexts.Count - 1].Key == listOfTexts.Count)
-                    //{
-                    //    mergeReady = true;
-                    //    return null;
-                    //}
-                    var listToReturn = new List<Text>();
                     var firstText = new Text();
                     var secondText = new Text();
 
                     firstText.Content = listOfTexts[i].Value;
                     secondText.Content = listOfTexts[i + 1].Value;
 
-                    listToReturn.Add(firstText);
-                    listToReturn.Add(secondText);
-                    return listToReturn;
+                    conflict = (firstText, secondText);
+                    unsolvedConflict = true;
+
+                    return false;
                 }
                 if (listOfTexts[i].Key == currentDecisionId)
                 {
                     resultText.Content += listOfTexts[i].Value;
                     currentDecisionId++;
-                    return null;
+                    return true;
                 }
             }
-            return null;
+            return true;
         }
 
         public Text CreateNewText()
         {
-            try
-            {
-                if (!this.mergeReady) throw new NotMergedException();
-                var resultText = new Text();
-                foreach (var blockOfText in this.listOfTexts) resultText.Content += blockOfText;
-                return resultText;
-            }
-            catch
-            {
-                return new Text();
-            }
+            if (!mergeReady) throw new NotMergedException();
+            var resultText = new Text();
+            foreach (var blockOfText in listOfTexts) resultText.Content += blockOfText;
+            return resultText;
             
         }
     }
