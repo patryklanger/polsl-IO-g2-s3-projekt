@@ -59,8 +59,8 @@ namespace FileComparator
             view.DisplayTextWithNumber(1, comparator.Conflict.Item1);
             view.DisplayTextWithNumber(2, comparator.Conflict.Item2);
             var userChoise = view.WaitForUserInput();
-            if (userChoise == "1") comparator.ResolveConfivt(0);
-            else comparator.ResolveConfivt(1);
+            if (userChoise == "1") comparator.ResolveConflict(0);
+            else comparator.ResolveConflict(1);
         } 
         
     }

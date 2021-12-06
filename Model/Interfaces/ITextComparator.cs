@@ -8,7 +8,7 @@ namespace FileComparator
         public abstract Text CreateNewText();
         public void MakeComparison(Text text1, Text text2);
         public bool MakeDecision();
-        public void ResolveConfivt(int index);
+        public void ResolveConflict(int index);
         public List<KeyValuePair<int, string>> ListOfTexts
         {
             get;

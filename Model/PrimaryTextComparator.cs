@@ -61,7 +61,7 @@ namespace FileComparator
             resultText = new Text();
 
         }
-        public void ResolveConfivt(int index)
+        public void ResolveConflict(int index)
         {
             if (index == 0) this.resultText.Content += conflict.Item1.Content;
             else if (index == 1) this.resultText.Content += conflict.Item2.Content;
