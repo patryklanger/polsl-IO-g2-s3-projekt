@@ -10,6 +10,7 @@ namespace FileComparator
         private bool mergeReady = false;
         private bool compared = false;
         private List<KeyValuePair<int, string>> listOfTexts;
+        private Text resultText;
         public List<KeyValuePair<int, string>> ListOfTexts
         {
             private set => listOfTexts = value;
@@ -26,11 +27,38 @@ namespace FileComparator
                 }
             }
         }
-
+        public Text ResultText
+        {
+            get
+            {
+                try
+                {
+                    if (!mergeReady) throw new NotMergedException();
+                    return resultText;
+                }
+                catch
+                {
+                    return new Text();
+                }
+            }
+            private set => resultText = value;
+        }
+        public bool MergeReady
+        {
+            private set => mergeReady = value;
+            get => mergeReady;
+        }
         public PrimaryTextComparator()
         {
-        }
+            currentDecisionId = 0;
+            resultText = new Text();
 
+        }
+        public void ConflictSolved(Text textToAdd)
+        {
+            this.resultText.Content += textToAdd.Content;
+            currentDecisionId++;
+        }
         private List<Diff> DiffLineMode(string text1, string text2)
         {
             var dmp = new diff_match_patch();
@@ -84,9 +112,48 @@ namespace FileComparator
             this.listOfTexts = diffDict;
         }
 
-        public void MakeDecision()
+        public List<Text> MakeDecision()
         {
-            throw new NotImplementedException();
+            if (mergeReady) return null;
+            for (int i = 0; i < listOfTexts.Count; i++)
+            {
+                if(i == listOfTexts.Count - 1 && listOfTexts[listOfTexts.Count-1].Key == currentDecisionId)
+                {
+                    resultText.Content += listOfTexts[i].Value;
+                    mergeReady = true;
+                    return null;
+                }
+                if (listOfTexts[i].Key == listOfTexts[i+1].Key && listOfTexts[i].Key == currentDecisionId)
+                {
+                    //Console.WriteLine("Choose version: 1 or 2");
+                    //string userChoise = Console.ReadLine();
+                    //if (userChoise == "1") resultText.Content += listOfTexts[i].Value;
+                    //else resultText.Content += listOfTexts[i + 1].Value;
+                    //currentDecisionId++;
+                    //if(listOfTexts[listOfTexts.Count - 1].Key == listOfTexts.Count)
+                    //{
+                    //    mergeReady = true;
+                    //    return null;
+                    //}
+                    var listToReturn = new List<Text>();
+                    var firstText = new Text();
+                    var secondText = new Text();
+
+                    firstText.Content = listOfTexts[i].Value;
+                    secondText.Content = listOfTexts[i + 1].Value;
+
+                    listToReturn.Add(firstText);
+                    listToReturn.Add(secondText);
+                    return listToReturn;
+                }
+                if (listOfTexts[i].Key == currentDecisionId)
+                {
+                    resultText.Content += listOfTexts[i].Value;
+                    currentDecisionId++;
+                    return null;
+                }
+            }
+            return null;
         }
 
         public Text CreateNewText()

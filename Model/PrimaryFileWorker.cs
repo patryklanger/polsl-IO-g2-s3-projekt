@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 namespace FileComparator
 {
     public class PrimaryFileWorker : IFileReader, IFileSaver
@@ -9,12 +11,24 @@ namespace FileComparator
 
         public Text ReadFile(string filePath)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string text = System.IO.File.ReadAllText(filePath);
+                var resultObject = new Text();
+                resultObject.Directory = filePath;
+                resultObject.Content = text;
+                return resultObject;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return new Text();
+            }
         }
 
-        public void SaveFile(Text textToSave, string directory, string fileName)
+        public async Task SaveFile(Text textToSave, string directory, string fileName)
         {
-            throw new NotImplementedException();
+            await File.WriteAllTextAsync((directory+fileName), textToSave.Content);
         }
     }
 }

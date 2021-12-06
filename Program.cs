@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DiffMatchPatch;
 
 namespace FileComparator
@@ -7,13 +8,13 @@ namespace FileComparator
     class Program
     {
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var textComparator = new PrimaryTextComparator();
             var fileWorker = new PrimaryFileWorker();
             var view = new View();
             var controller = new Controller(textComparator, view, fileWorker);
-            controller.Main();
+            await controller.Main();
         }
     }
 }

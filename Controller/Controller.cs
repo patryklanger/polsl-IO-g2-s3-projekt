@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FileComparator
 {
@@ -17,27 +18,39 @@ namespace FileComparator
             this.view = view;
             this.fileWorker = fileWorker;
         }
-        public void Main()
+        public async Task Main()
         {
-            string firstStringToCompare = "Jestem taki sam jak ty\nTroche inny";
-            string secondStringToCompare = "Goodbye World!\nJestem taki sam jak ty\ntro inny";
 
-            var text1 = new Text();
-            var text2 = new Text();
-            text1.Content = firstStringToCompare;
-            text2.Content = secondStringToCompare;
+            var text11 = fileWorker.ReadFile(@"/Users/patryklanger/inputFile.txt");
+            var text12 = fileWorker.ReadFile(@"/Users/patryklanger/inputFile1.txt");
 
-            comparator.MakeComparison(text1, text2);
-
-            List<KeyValuePair<int, string>> a = comparator.ListOfTexts;
-
-            foreach (var element in a)
+            List<Text> tmpList;
+            comparator.MakeComparison(text11, text12);
+            while (!comparator.MergeReady)
             {
-                view.displayElement(element);
+                tmpList = comparator.MakeDecision();
+                if(tmpList != null)
+                {
+                    SolveConflict(tmpList);
+                    tmpList = null;
+                }
             }
+
+            Text resultText = comparator.ResultText;
+            Console.WriteLine(resultText.Content);
+            await fileWorker.SaveFile(resultText, @"/Users/patryklanger/", "result.txt").ContinueWith((antecedent) =>Console.WriteLine("FileSaved!"));
 
             
         }
+        private void SolveConflict(List<Text> conflictList)
+        {
+            view.DisplayText("Choose between two options:\nFirst option is");
+            view.DisplayTextWithNumber(1, conflictList[0]);
+            view.DisplayTextWithNumber(2, conflictList[1]);
+            var userChoise = view.WaitForUserInput();
+            if (userChoise == "1") comparator.ConflictSolved(conflictList[0]);
+            else comparator.ConflictSolved(conflictList[1]);
+        } 
         
     }
 }
