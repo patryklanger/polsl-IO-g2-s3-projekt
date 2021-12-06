@@ -39,19 +39,9 @@ namespace FileComparator
                 view.DisplayText(e.Message);
             }
             comparator.MakeComparison(text1, text2);
-            while (!comparator.MergeReady)
-            {
-                if(!comparator.MakeDecision())
-                {
-                    SolveConflict();
-                }
-            }
-
+            while (!comparator.MergeReady) if(!comparator.MakeDecision()) SolveConflict();
             Text resultText = comparator.ResultText;
-            Console.WriteLine(resultText.Content);
             await fileWorker.SaveFile(resultText, RESULT_FILE_FILEPATH, RESULT_FILE_FILENAME).ContinueWith((antecdent) => Console.WriteLine(FILE_SAVED_MESSAGE));
-
-            
         }
         private void SolveConflict()
         {

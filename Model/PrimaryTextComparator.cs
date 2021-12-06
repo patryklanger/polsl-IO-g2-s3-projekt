@@ -8,27 +8,10 @@ namespace FileComparator
     {
         private int currentDecisionId;
         private bool mergeReady = false;
-        private bool compared = false;
-        private bool unsolvedConflict = false;
+        private bool unresolvedConflict = false;
         private List<KeyValuePair<int, string>> listOfTexts;
         private Text resultText;
         private (Text, Text) conflict = (new Text(), new Text());
-        public List<KeyValuePair<int, string>> ListOfTexts
-        {
-            private set => listOfTexts = value;
-            get
-            {
-                try
-                {
-                    if (!compared) throw new NotComparedException();
-                    return listOfTexts;
-                }
-                catch
-                {
-                    return new List<KeyValuePair<int, string>>();
-                }
-            }
-        }
         public Text ResultText
         {
             get
@@ -67,7 +50,7 @@ namespace FileComparator
             else if (index == 1) this.resultText.Content += conflict.Item2.Content;
             else throw new IndexOutOfRangeException();
             conflict = (new Text(), new Text());
-            unsolvedConflict = false;
+            unresolvedConflict = false;
             if (currentDecisionId == listOfTexts[^1].Key) mergeReady = true;
             else currentDecisionId++;
         }
@@ -89,7 +72,6 @@ namespace FileComparator
             var diff = DiffLineMode(text1.Content, text2.Content);
             dmp.diff_cleanupSemantic(diff);
             SplitToBlocks(diff);
-            this.compared = true;
         } 
 
         private void SplitToBlocks(List<Diff> diffSToSplit)
@@ -126,7 +108,7 @@ namespace FileComparator
 
         public bool MakeDecision()
         {
-            if (unsolvedConflict) throw new UnresolvedConflictException();
+            if (unresolvedConflict) throw new UnresolvedConflictException();
             if (mergeReady) return true;
             for (int i = 0; i < listOfTexts.Count; i++)
             {
@@ -145,7 +127,7 @@ namespace FileComparator
                     secondText.Content = listOfTexts[i + 1].Value;
 
                     conflict = (firstText, secondText);
-                    unsolvedConflict = true;
+                    unresolvedConflict = true;
 
                     return false;
                 }
